@@ -5,6 +5,7 @@ import tensorflow.keras as keras
 from tensorflow.keras.datasets import cifar10
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dropout, Conv2D, MaxPooling2D, Dense, Flatten
+from tensorflow.keras.layers import RandomFlip, RandomRotation, RandomZoom, RandomTranslation
 from tensorflow.keras import optimizers
 import matplotlib.pyplot as plt; import numpy as np
 
@@ -38,7 +39,19 @@ qx = qx.astype('float32'); qx /= 255; qx -=0.5; #-0.5 a +0.5
 ay = keras.utils.to_categorical(ay, num_classes)
 qy = keras.utils.to_categorical(qy, num_classes)
 
+
+prelayer = Sequential(
+    [ RandomRotation(60/360,fill_mode="nearest",interpolation="bilinear"),
+    #RandomTranslation(0.1, 0.1,fill_mode="nearest",interpolation="bilinear"),
+    #RandomFlip("horizontal"),
+    #Outras transformacoes
+    ]
+)
+
+
+
 model = Sequential()
+model.add(prelayer)
 model.add(Conv2D(20, kernel_size=(5,5), activation='relu', input_shape=input_shape))
 model.add(MaxPooling2D(pool_size=(2,2)))
 model.add(Conv2D(40, kernel_size=(5,5), activation='relu'))
